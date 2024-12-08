@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AddressBookMain {
+public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book Program");
 
@@ -29,6 +29,8 @@ public class AddressBookMain {
                 case 2:
                     System.out.println("Enter the name of the Address Book to use:");
                     String bookName = scanner.nextLine();
+
+                    // Get the Address Book by its name
                     ArrayList<Contact> currentAddressBook = multipleAddressBooks.getAddressBook(bookName);
 
                     if (currentAddressBook == null) {

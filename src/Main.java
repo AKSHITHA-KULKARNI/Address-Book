@@ -5,64 +5,87 @@ public class AddressBookMain {
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book Program");
 
-        ArrayList<Contact> contacts = new ArrayList<>();
+        // UC6: Initialize multiple address books
+        UC6MultipleAddressBooks multipleAddressBooks = new UC6MultipleAddressBooks();
         Scanner scanner = new Scanner(System.in);
-
-        // Create UC handlers
-        UC1AddContact addContactHandler = new UC1AddContact(contacts);
-        UC2EditContact editContactHandler = new UC2EditContact(contacts);
-        UC3DeleteContact deleteContactHandler = new UC3DeleteContact(contacts);
-        UC4DisplayContacts displayContactsHandler = new UC4DisplayContacts(contacts);
 
         while (true) {
             System.out.println("\nChoose an option:");
-            System.out.println("1. Add Contact");
-            System.out.println("2. Edit Contact");
-            System.out.println("3. Delete Contact");
-            System.out.println("4. Display Contacts");
-            System.out.println("5. Exit");
+            System.out.println("1. Add New Address Book");
+            System.out.println("2. Use Existing Address Book");
+            System.out.println("3. Display All Address Books");
+            System.out.println("4. Exit");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
-                    System.out.println("Enter first name: ");
-                    String firstName = scanner.nextLine();
-
-                    System.out.println("Enter last name: ");
-                    String lastName = scanner.nextLine();
-
-                    System.out.println("Enter address: ");
-                    String address = scanner.nextLine();
-
-                    System.out.println("Enter city: ");
-                    String city = scanner.nextLine();
-
-                    System.out.println("Enter state: ");
-                    String state = scanner.nextLine();
-
-                    System.out.println("Enter zip: ");
-                    String zip = scanner.nextLine();
-
-                    System.out.println("Enter phone number: ");
-                    String phoneNumber = scanner.nextLine();
-
-                    System.out.println("Enter email: ");
-                    String email = scanner.nextLine();
-
-                    Contact contact = new Contact(firstName, lastName, address, city, state, zip, phoneNumber, email);
-                    addContactHandler.addContact(contact);
+                    System.out.println("Enter the name of the new Address Book:");
+                    String newBookName = scanner.nextLine();
+                    multipleAddressBooks.addNewAddressBook(newBookName);
                     break;
 
                 case 2:
-                    System.out.println("Enter first name of the contact to edit: ");
+                    System.out.println("Enter the name of the Address Book to use:");
+                    String bookName = scanner.nextLine();
+                    ArrayList<Contact> currentAddressBook = multipleAddressBooks.getAddressBook(bookName);
+
+                    if (currentAddressBook == null) {
+                        System.out.println("Address Book '" + bookName + "' does not exist.");
+                    } else {
+                        useAddressBook(currentAddressBook);
+                    }
+                    break;
+
+                case 3:
+                    multipleAddressBooks.displayAllAddressBooks();
+                    break;
+
+                case 4:
+                    System.out.println("Exiting program...");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private static void useAddressBook(ArrayList<Contact> addressBook) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Create UC handlers for this specific address book
+        UC5AddMultipleContacts addMultipleContactsHandler = new UC5AddMultipleContacts(addressBook);
+        UC2EditContact editContactHandler = new UC2EditContact(addressBook);
+        UC3DeleteContact deleteContactHandler = new UC3DeleteContact(addressBook);
+        UC4DisplayContacts displayContactsHandler = new UC4DisplayContacts(addressBook);
+
+        while (true) {
+            System.out.println("\nChoose an option for the Address Book:");
+            System.out.println("1. Add Multiple Contacts");
+            System.out.println("2. Edit Contact");
+            System.out.println("3. Delete Contact");
+            System.out.println("4. Display Contacts");
+            System.out.println("5. Return to Main Menu");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addMultipleContactsHandler.addMultipleContacts();
+                    break;
+
+                case 2:
+                    System.out.println("Enter first name of the contact to edit:");
                     String nameToEdit = scanner.nextLine();
                     editContactHandler.editContact(nameToEdit);
                     break;
 
                 case 3:
-                    System.out.println("Enter first name of the contact to delete: ");
+                    System.out.println("Enter first name of the contact to delete:");
                     String nameToDelete = scanner.nextLine();
                     deleteContactHandler.deleteContact(nameToDelete);
                     break;
@@ -72,8 +95,6 @@ public class AddressBookMain {
                     break;
 
                 case 5:
-                    System.out.println("Exiting program...");
-                    scanner.close();
                     return;
 
                 default:
